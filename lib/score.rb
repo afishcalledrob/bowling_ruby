@@ -1,7 +1,6 @@
 class Score
 
   def initialize
-    @frame = []
     @total_score = 0
   end
 
@@ -21,6 +20,9 @@ class Score
   def extra_score(frame, frame_index)
     if frame.type == 'spare'
       @total_score += @total_frames[frame_index + 1].rolls[0]
+    elsif frame.type == 'strike'
+      @total_score += @total_frames[frame_index + 1].rolls[0]
+      @total_score += @total_frames[frame_index + 1].rolls[1]
     end
   end
 
