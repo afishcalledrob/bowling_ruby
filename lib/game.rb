@@ -1,9 +1,8 @@
 
 class Game
-    attr_reader :all_frames
-    
-    def initialize
-        @all_frames = []
-    end
-    
+  attr_reader :total_frames
+
+  def initialize
+    @total_frames = []
+  end
 end
