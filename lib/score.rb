@@ -1,6 +1,6 @@
 class Score
     
-    attr_reader :frame, :frame_index, :rolls
+    attr_reader :frame, :frame_index, :rolls, :total_score
 
   def initialize
     @total_score = 0

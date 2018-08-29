@@ -6,8 +6,28 @@ describe Game do
       expect(subject.total_frames).to eq []
     end
     
-    it 'initializes with an initial score of zero' do
-      expect(subject.score).to eq 0
+    xit 'initializes with an initial score of zero' do
+      expect(subject.total_score).to eq 0
     end
-  end  
+  end 
+  
+  describe '#add_first_roll' do
+    it 'adds first roll to the frame' do
+      expect(subject.add_first_roll(3)).to eq([3])
+    end
+  end
+  
+  describe '#add_second_roll' do
+    it 'add second roll to the frame' do
+      expect(subject.add_second_roll(3)).to eq([3])
+    end
+  end
+  
+  describe '#add_frame' do
+    it 'add rolls to the frames array' do
+      subject.add_first_roll(4)
+      subject.add_second_roll(5)
+      expect(subject.add_frame(subject.frame.rolls)).to eq []
+    end
+  end
 end
