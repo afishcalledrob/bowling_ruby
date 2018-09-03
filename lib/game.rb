@@ -1,24 +1,38 @@
 require_relative 'score'
 require_relative 'frame'
-class Game
-  attr_reader :total_frames, :score, :frame
+require_relative 'final_frame'
 
-  def initialize(score = Score.new, frame = Frame.new)
-    @frame = frame
-    @total_frames = []
-    @score = score
+class Game
+  attr_reader :total_frames
+
+  class GameOverError < StandardError; end
+
+  def initialize(score = CalculateScore.new)
+    @total_frames = [FinalFrame.new]
+    9.times { @total_frames.unshift Frame.new }
+    @score_calculator = score
   end
-  
-  def add_first_roll(pins)
-    @frame.add_roll(pins)
+
+  def add_roll(pins)
+    raise GameOverError if complete?
+    current_frame.rolls << pins
   end
-  
-  def add_second_roll(pins)
-    @frame.add_roll(pins)
+
+  def total_score
+    @score_calculator.calculation(@total_frames)
   end
-  
-  def add_frame(rolls)
-    @total_frames << rolls
-    @frame.clear_rolls
+
+  private
+
+  def complete?
+    final_frame.complete?
+  end
+
+  def current_frame
+    @total_frames.find(&:incomplete?)
+  end
+
+  def final_frame
+    @total_frames.last
   end
 end

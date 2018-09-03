@@ -1,40 +1,42 @@
 class Score
     
-    attr_reader :frame, :frame_index, :rolls, :total_score
-
-  def initialize
+ def initialize
     @total_score = 0
-  end
+ end
 
-  def total_score(frames)
+  def calculation(frames)
     @total_frames = frames
-    if perfect_game?
-        @total_score += 300
-    else   
-      @total_frames.each_with_index { |frame, index| frame_score(frame, index) }
-    end
+    @total_frames.each_with_index { |frame, index| calculate_frame_score(frame, index) }
     @total_score
   end
 
   private
-  
-  def perfect_game?
-     @total_frames.max == @total_frames.min && @total_frames[0].rolls[0] == 10 
-  end
 
-  def frame_score(frame, frame_index)
+  def calculate_frame_score(frame, frame_index)
     @total_score += frame.rolls.sum
-    extra_score(frame, frame_index)
+    calculate_special_scores(frame, frame_index)
   end
 
-  def extra_score(frame, frame_index)
-     if @total_frames[frame_index + 1].nil?
-         puts 'Game Finished!'
-    elsif frame.type == 'spare'
-      @total_score += @total_frames[frame_index + 1].rolls[0]
-    elsif frame.type == 'strike'
-      @total_score += @total_frames[frame_index + 1].rolls.sum
+  def calculate_special_scores(frame, frame_index)
+    if @total_frames[frame_index + 1]
+      spare_score(frame, frame_index)
+      strike_score(frame, frame_index)
     end
   end
 
+  def spare_score(frame, frame_index)
+    if frame.spare? || frame.strike?
+      @total_score += @total_frames[frame_index + 1].rolls[0]
+    end
+  end
+
+  def strike_score(frame, frame_index)
+    if frame.strike?
+      if @total_frames[frame_index + 1].rolls[1]
+        @total_score += @frames[frame_index + 1].rolls[1]
+      elsif @total_frames[frame_index + 2].rolls[0]
+        @total_score += @total_frames[frame_index + 2].rolls[0]
+      end
+    end
+  end
 end
