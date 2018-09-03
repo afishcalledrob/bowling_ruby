@@ -33,7 +33,7 @@ class Score
   def strike_score(frame, frame_index)
     if frame.strike?
       if @total_frames[frame_index + 1].rolls[1]
-        @total_score += @frames[frame_index + 1].rolls[1]
+        @total_score += @total_frames[frame_index + 1].rolls[1]
       elsif @total_frames[frame_index + 2].rolls[0]
         @total_score += @total_frames[frame_index + 2].rolls[0]
       end

@@ -1,45 +1,40 @@
 require 'score'
 
 describe Score do
-  describe '#total_score' do
-    xit 'returns total game score void spares and strikes' do
-      basic_frame = instance_double('basic_frame', :rolls => [1, 2], :type => 'complete')
-      frames = Array.new(10, basic_frame)
+  describe '#score_calc' do
+    let(:simple_frame) { instance_double('simple_frame', rolls: [1, 2], complete?: true, spare?: false, strike?: false, final?: false) }
+    let(:spare_frame) { instance_double('spare_frame', rolls: [9, 1], spare?: true, complete?: false, strike?: false, final?: false) }
+    let(:strike_frame) { instance_double('strike_frame', rolls: [10], strike?: true, complete?: false, spare?: false, final?: false) }
 
-      expect(subject.total_score(frames)).to eq 30
+    it 'will return the total score of a game with no spares or strikes' do
+      frames = Array.new(10, simple_frame)
+      expect(subject.calculation(frames)).to eq 30
     end
 
-    xit 'returns total score of a game with a spare' do
-      basic_frame = instance_double('basic_frame', :rolls => [1, 2], :type => 'complete')
-      spare_frame = instance_double('spare_frame', :rolls => [9, 1], :type => 'spare')
+    it 'will return the total score of a game with one spare' do
       frames = [spare_frame]
-      9.times { frames << basic_frame }
-      allow(:frames).to receive(:total_score).and_return(false)
+      9.times { frames << simple_frame }
+      expect(subject.calculation(frames)).to eq 38
+    end
 
-      expect(subject.total_score(frames)).to eq 38
+    it 'will return the total score of 135 of a game with all spares' do
+      frames = []
+      10.times { frames << spare_frame }
+      expect(subject.calculation(frames)).to eq 181
     end
-    
-    xit 'returns a total score of 135 if game is all spares' do
-        spare_frame = instance_double('spare_frame', :rolls => [9, 1], :type => 'spare')
-        frames = []
-        10.times { frames << spare_frame }
-        expect(subject.total_score(frames)).to eq(181)
-        
+
+    it 'will return the total score of a game with one strike' do
+      frames = [strike_frame]
+      9.times { frames << simple_frame }
+      expect(subject.calculation(frames)).to eq 40
     end
-    
-    xit 'returns total score for a game with a strike' do
-        basic_frame = instance_double('basic_frame', :rolls => [1, 2], :type => 'complete')
-        strike_frame = instance_double('strike_frame', :rolls => [10], :type => 'strike')
-        frames = [strike_frame]
-        9.times {frames << basic_frame}
-        expect(subject.total_score(frames)).to eq(40)
+
+    it 'will return the total score of 300 for a perfect game' do
+      final_frame = instance_double('final_frame', rolls: [10, 10, 10], strike?: true, spare: false, complete?: false, final?: true)
+      frames = []
+      9.times { frames << strike_frame }
+      frames << final_frame
+      expect(subject.calculation(frames)).to eq 300
     end
-    
-    xit 'returns final score of 300 for perfect game' do
-        strike_frame = instance_double('strike_frame', :rolls => [10], :type => 'strike')
-        frames = []
-        10.times {frames << strike_frame}
-        expect(subject.total_score(frames)).to eq(300)
-    end    
   end
 end
