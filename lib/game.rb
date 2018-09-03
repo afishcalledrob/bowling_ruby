@@ -7,7 +7,7 @@ class Game
 
   class GameOverError < StandardError; end
 
-  def initialize(score = CalculateScore.new)
+  def initialize(score = Score.new)
     @total_frames = [FinalFrame.new]
     9.times { @total_frames.unshift Frame.new }
     @score_calculator = score
