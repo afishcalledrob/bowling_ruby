@@ -1,34 +1,37 @@
 require 'frame'
 
 describe Frame do
-    describe '#frame_type' do
-       xit 'returns strike if first roll per frame is 10' do 
-         rolls = [10]
-         expect(subject.frame_type(rolls)).to eq('strike')
-       end
-       
-       xit 'returns a spare if sum of both rolls is 10' do
-           rolls = [4, 6]
-           expect(subject.frame_type(rolls)).to eq('spare')
-       end
-       
-       xit 'returns normal if both rolls total at less than 10' do
-           rolls = [2, 3]
-           expect(subject.frame_type(rolls)).to eq('normal')
-       end
+  describe '#strike?' do
+    it 'should return true if first roll in frame is 10' do
+      subject.add_roll(10)
+      expect(subject.strike?).to eq true
     end
-    
-    describe '#add_roll' do
-       xit 'should add a new roll to the rolls array' do
-          frame = Frame.new
-          expect(frame.add_roll(5)).to eq [5]
-       end
-    
-        xit 'should add a second roll to the rolls array' do
-           frame = Frame.new
-           frames = []
-           frame.add_roll(9)
-           expect(frame.add_roll(1)).to eq [9, 1]
-        end
+  end
+
+  describe '#spare?' do
+    it 'should return true if both rolls total 10' do
+      subject.add_roll(8)
+      subject.add_roll(2)
+      expect(subject.spare?).to eq true
     end
+  end
+
+  describe '#complete?' do
+    it 'should return true if total for both rolls are less than 10' do
+      subject.add_roll(2)
+      subject.add_roll(3)
+      expect(subject.complete?).to eq true
+    end
+  end
+
+  describe '#add_roll' do
+    it 'should add a roll to the rolls array' do
+      expect(subject.add_roll(10)).to eq [10]
+    end
+
+    it 'should add a second roll to the rolls array' do
+      subject.add_roll(9)
+      expect(subject.add_roll(1)).to eq [9, 1]
+    end
+  end
 end
